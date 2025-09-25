@@ -11,28 +11,21 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Book {
+public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(nullable = false, unique = true)
-    private String isbn;
+    private int authorId;
 
     @Column(nullable = false)
-    private String title;
+    private String firstName;
 
-    private int maxLoanDays;
+    @Column(nullable = false)
+    private String lastName;
 
-    @ManyToMany
-    @JoinTable(
-            name = "book_author",
-            joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "author_id")
-    )
+    @ManyToMany(mappedBy = "authors")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude   // prevents recursion stack overflow
     @Builder.Default
-    private Set<Author> authors = new HashSet<>();
+    private Set<Book> books = new HashSet<>();
 }
