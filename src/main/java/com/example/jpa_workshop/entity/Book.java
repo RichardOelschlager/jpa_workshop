@@ -35,4 +35,20 @@ public class Book {
     @EqualsAndHashCode.Exclude   // prevents recursion stack overflow
     @Builder.Default
     private Set<Author> authors = new HashSet<>();
+
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean available = true;
+
+    // helper methods for authors
+    public void addAuthor(Author author) {
+        authors.add(author);
+        author.getBooks().add(this);
+    }
+
+    public void removeAuthor(Author author) {
+        authors.remove(author);
+        author.getBooks().remove(this);
+    }
+
 }

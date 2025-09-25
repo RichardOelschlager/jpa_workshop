@@ -27,4 +27,26 @@ public class BookLoan {
     @ManyToOne(optional = false)
     @JoinColumn(name = "book_id", referencedColumnName = "id")
     private Book book;
+
+    public static BookLoan createLoan(Book book, AppUser user) {
+        if (!book.isAvailable()) {
+            throw new IllegalStateException("Book is not available for loan.");
+        }
+
+        LocalDate now = LocalDate.now();
+
+        BookLoan loan = BookLoan.builder()
+                .book(book)
+                .borrower(user)
+                .loanDate(now)
+                .dueDate(now.plusDays(book.getMaxLoanDays()))
+                .build();
+
+        // link both sides
+        user.addBookLoan(loan);
+        book.setAvailable(false);
+
+        return loan;
+    }
+
 }
